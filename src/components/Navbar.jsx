@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 const navLinks = [
     { name: 'Home', href: '#home' },
     { name: 'About', href: '#about' },
+    { name: 'Projects', href: '#my-projects' },
     { name: 'Certifications', href: '#projects' },
     { name: 'Contact', href: '#contact' },
 ];
@@ -20,7 +21,7 @@ const Navbar = () => {
             setScrollProgress((scrollTop / docHeight) * 100);
             setIsScrolled(scrollTop > 50);
 
-            const sections = ['home', 'about', 'projects', 'contact'];
+            const sections = ['home', 'about', 'my-projects', 'projects', 'contact'];
             for (const section of sections.reverse()) {
                 const el = document.getElementById(section);
                 if (el && el.getBoundingClientRect().top <= 150) {
