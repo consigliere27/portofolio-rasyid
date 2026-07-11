@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FiExternalLink, FiGithub, FiX, FiLayers, FiArrowUpRight } from 'react-icons/fi';
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { FiExternalLink, FiGithub, FiX, FiLayers, FiArrowUpRight, FiCode } from 'react-icons/fi';
 
 const categories = ['All', 'Web', 'IoT', 'AI'];
 
@@ -16,68 +16,176 @@ const projects = [
         githubUrl: '#',
         featured: true,
         gradient: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a78bfa 100%)',
+        accent: '#8b5cf6'
     },
     {
         id: 2,
-        title: 'Smart Home IoT Dashboard',
-        category: 'IoT',
-        description: 'Dashboard real-time untuk monitoring suhu, kelembapan, dan kontrol perangkat rumah pintar menggunakan sensor IoT dan visualisasi data interaktif.',
-        tags: ['IoT', 'React', 'Recharts', 'ESP32'],
-        image: null,
-        liveUrl: '#',
-        githubUrl: '#',
-        featured: false,
-        gradient: 'linear-gradient(135deg, #06b6d4 0%, #6366f1 50%, #8b5cf6 100%)',
-    },
-    {
-        id: 3,
-        title: 'Portfolio Website',
+        title: 'CSS Effect Library',
         category: 'Web',
-        description: 'Website portfolio personal dengan desain glassmorphism modern, animasi smooth, custom cursor, dan preloader animation. Built with React & Framer Motion.',
-        tags: ['React', 'Framer Motion', 'TailwindCSS', 'Vite'],
-        image: null,
-        liveUrl: '#',
+        description: 'A comprehensive collection of pure CSS effects with live interactive demos and copy-ready code snippets.',
+        tags: ['CSS', 'Animations', 'Web', 'Effects'],
+        image: null, // Since we don't have a screenshot yet
+        liveUrl: 'https://css-effect-library.space-z.ai/',
         githubUrl: '#',
         featured: false,
-        gradient: 'linear-gradient(135deg, #8b5cf6 0%, #c084fc 50%, #e879f9 100%)',
-    },
-    {
-        id: 4,
-        title: 'Google Ads Campaign Analyzer',
-        category: 'AI',
-        description: 'Tool analisis performa kampanye Google Ads menggunakan data analytics untuk optimasi strategi digital marketing dan ROI tracking.',
-        tags: ['Analytics', 'Google Ads', 'Data Viz', 'Python'],
-        image: null,
-        liveUrl: '#',
-        githubUrl: '#',
-        featured: false,
-        gradient: 'linear-gradient(135deg, #f59e0b 0%, #f97316 50%, #ef4444 100%)',
-    },
-    {
-        id: 5,
-        title: 'Financial Literacy App',
-        category: 'Web',
-        description: 'Aplikasi web untuk membantu pengguna memahami dasar-dasar literasi keuangan dengan konten interaktif dan kalkulator finansial.',
-        tags: ['React', 'Finance', 'Education', 'Chart.js'],
-        image: null,
-        liveUrl: '#',
-        githubUrl: '#',
-        featured: false,
-        gradient: 'linear-gradient(135deg, #10b981 0%, #06b6d4 50%, #6366f1 100%)',
-    },
-    {
-        id: 6,
-        title: 'Sensor Data Logger',
-        category: 'IoT',
-        description: 'Sistem logging data sensor IoT dengan penyimpanan cloud, grafik real-time, dan notifikasi threshold otomatis.',
-        tags: ['IoT', 'Arduino', 'Firebase', 'WebSocket'],
-        image: null,
-        liveUrl: '#',
-        githubUrl: '#',
-        featured: false,
-        gradient: 'linear-gradient(135deg, #14b8a6 0%, #22d3ee 50%, #38bdf8 100%)',
+        gradient: 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #6366f1 100%)',
+        accent: '#06b6d4'
     },
 ];
+
+/* ── 3D Bento Card ───────────────────────────────────────── */
+const ProjectCard3D = ({ project, onClick, index }) => {
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
+
+    const mouseXSpring = useSpring(x, { stiffness: 300, damping: 30 });
+    const mouseYSpring = useSpring(y, { stiffness: 300, damping: 30 });
+
+    const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7deg", "-7deg"]);
+    const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7deg", "7deg"]);
+
+    const handleMouseMove = (e) => {
+        const { currentTarget, clientX, clientY } = e;
+        const rect = currentTarget.getBoundingClientRect();
+        
+        // Update CSS Variables for Glow Effect
+        currentTarget.style.setProperty('--mouse-x', `${clientX - rect.left}px`);
+        currentTarget.style.setProperty('--mouse-y', `${clientY - rect.top}px`);
+
+        // Update 3D Tilt Values
+        const width = rect.width;
+        const height = rect.height;
+        const mouseX = clientX - rect.left;
+        const mouseY = clientY - rect.top;
+        const xPct = mouseX / width - 0.5;
+        const yPct = mouseY / height - 0.5;
+        
+        x.set(xPct);
+        y.set(yPct);
+    };
+
+    const handleMouseLeave = () => {
+        x.set(0);
+        y.set(0);
+    };
+
+    // Determine Bento sizing based on index
+    // index 0: span 8 (featured), index 1: span 4, index 2 & 3: span 6, etc.
+    let bentoClass = "bento-item-regular";
+    if (index % 4 === 0) bentoClass = "bento-item-featured";
+    else if (index % 4 === 1) bentoClass = "bento-item-regular";
+    else bentoClass = "bento-item-wide";
+
+    return (
+        <motion.div
+            layout
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.6, delay: index * 0.1, ease: [0.23, 1, 0.32, 1] }}
+            className={`glow-card-wrapper cursor-pointer group ${bentoClass} flex flex-col h-full min-h-[340px]`}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            onClick={onClick}
+            style={{ 
+                rotateX, 
+                rotateY, 
+                transformStyle: "preserve-3d",
+                perspective: "1000px"
+            }}
+        >
+            <div 
+                className="absolute inset-0 z-0 transition-opacity duration-500 opacity-20 group-hover:opacity-40"
+                style={{ background: `radial-gradient(circle at 50% 0%, ${project.accent}40, transparent 70%)` }}
+            />
+            
+            <div className="relative z-10 flex flex-col h-full p-6 md:p-8" style={{ transform: "translateZ(30px)" }}>
+                {/* Header */}
+                <div className="flex justify-between items-start mb-6">
+                    <div 
+                        className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
+                        style={{ background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)' }}
+                    >
+                        {project.category === 'Web' ? <FiCode size={20} color={project.accent} /> : <FiLayers size={20} color={project.accent} />}
+                    </div>
+                    <span className="px-3 py-1 rounded-full text-[10px] font-semibold tracking-widest uppercase shadow-sm"
+                        style={{ background: `${project.accent}20`, color: project.accent, border: `1px solid ${project.accent}40` }}
+                    >
+                        {project.category}
+                    </span>
+                </div>
+
+                {/* Content */}
+                <div className="flex-grow flex flex-col justify-center">
+                    <h3 className="text-2xl md:text-3xl font-bold font-outfit mb-3 transition-colors duration-300 group-hover:text-white"
+                        style={{ color: '#f0eef8' }}
+                    >
+                        {project.title}
+                    </h3>
+                    <p className="text-sm md:text-base leading-relaxed mb-6 line-clamp-3"
+                        style={{ color: 'rgba(226, 224, 240, 0.5)' }}
+                    >
+                        {project.description}
+                    </p>
+                </div>
+
+                {/* Footer */}
+                <div className="mt-auto">
+                    <div className="flex flex-wrap gap-2 mb-6">
+                        {project.tags.map((tag) => (
+                            <span key={tag} className="px-3 py-1 rounded-md text-[11px] font-medium transition-all duration-300 group-hover:bg-white/10"
+                                style={{
+                                    color: 'rgba(226, 224, 240, 0.6)',
+                                    background: 'rgba(255, 255, 255, 0.04)',
+                                    border: '1px solid rgba(255, 255, 255, 0.05)',
+                                }}
+                            >
+                                {tag}
+                            </span>
+                        ))}
+                    </div>
+
+                    <div className="flex items-center justify-between pt-5 border-t border-white/5">
+                        <div className="flex items-center gap-4">
+                            {project.liveUrl && project.liveUrl !== '#' && (
+                                <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider transition-colors"
+                                    style={{ color: project.accent }}
+                                >
+                                    <FiExternalLink size={14} /> Live
+                                </span>
+                            )}
+                            {project.githubUrl && project.githubUrl !== '#' && (
+                                <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider transition-colors"
+                                    style={{ color: 'rgba(226, 224, 240, 0.6)' }}
+                                >
+                                    <FiGithub size={14} /> Source
+                                </span>
+                            )}
+                        </div>
+                        <motion.div 
+                            className="w-8 h-8 rounded-full flex items-center justify-center bg-white/5 border border-white/10 group-hover:bg-white/10 group-hover:scale-110 transition-all"
+                            style={{ color: 'rgba(255,255,255,0.8)' }}
+                        >
+                            <FiArrowUpRight size={14} />
+                        </motion.div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Background Image/Gradient */}
+            <div className="absolute inset-0 z-[-1] overflow-hidden rounded-2xl opacity-40 group-hover:opacity-70 transition-opacity duration-700" style={{ transform: "translateZ(0px)" }}>
+                {project.image ? (
+                    <>
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0c0a1d] via-[#0c0a1d]/80 to-transparent z-10" />
+                        <img src={project.image} alt={project.title} className="w-full h-full object-cover object-right-bottom opacity-50 blur-[2px] group-hover:blur-0 group-hover:scale-105 transition-all duration-700" />
+                    </>
+                ) : (
+                    <div className="absolute inset-0 opacity-20" style={{ background: project.gradient }} />
+                )}
+            </div>
+        </motion.div>
+    );
+};
 
 /* ── Modal ───────────────────────────────────────────────── */
 const ProjectModal = ({ project, onClose }) => {
@@ -88,109 +196,111 @@ const ProjectModal = ({ project, onClose }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            style={{ backgroundColor: 'rgba(12, 10, 29, 0.8)', backdropFilter: 'blur(16px)' }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 glow-modal-overlay"
             onClick={onClose}
         >
             <motion.div
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.95, opacity: 0 }}
-                transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                className="glass-modal max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                initial={{ y: 50, opacity: 0, scale: 0.95 }}
+                animate={{ y: 0, opacity: 1, scale: 1 }}
+                exit={{ y: 20, opacity: 0, scale: 0.95 }}
+                transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                className="relative max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-3xl"
+                style={{ 
+                    background: 'rgba(15, 13, 35, 0.9)', 
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    boxShadow: `0 30px 100px -20px ${project.accent}40`
+                }}
                 onClick={(e) => e.stopPropagation()}
             >
-                {/* Cover */}
-                <div
-                    className="relative h-48 sm:h-56 overflow-hidden rounded-t-[20px] flex items-center justify-center"
-                    style={{ background: project.gradient }}
-                >
-                    {project.image ? (
-                        <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
-                    ) : (
-                        <motion.div
-                            initial={{ scale: 0.8, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            transition={{ delay: 0.1 }}
-                            className="text-center"
-                        >
-                            <div className="w-16 h-16 mx-auto mb-3 rounded-2xl flex items-center justify-center"
-                                style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(10px)' }}
-                            >
-                                <FiLayers size={28} style={{ color: '#fff' }} />
-                            </div>
-                            <p className="text-sm font-medium tracking-wide" style={{ color: 'rgba(255,255,255,0.8)' }}>
-                                {project.category}
-                            </p>
-                        </motion.div>
-                    )}
-
-                    <motion.button
-                        onClick={onClose}
-                        className="absolute top-4 right-4 p-2 rounded-full cursor-hover"
-                        style={{ color: 'rgba(255,255,255,0.6)', background: 'rgba(255,255,255,0.1)' }}
-                        whileHover={{ scale: 1.1, color: '#fff' }}
-                        whileTap={{ scale: 0.9 }}
-                    >
-                        <FiX size={18} />
-                    </motion.button>
-                </div>
-
-                {/* Content */}
-                <div className="p-6 relative z-10">
-                    <p className="text-xs tracking-wider uppercase mb-2 flex items-center gap-1.5"
-                        style={{ color: '#818cf8' }}
-                    >
-                        <FiLayers size={14} /> {project.category}
-                    </p>
-                    <h3 className="text-xl font-bold font-outfit mb-3" style={{ color: '#f0eef8' }}>
-                        {project.title}
-                    </h3>
-                    <p className="text-sm leading-relaxed mb-6" style={{ color: 'rgba(226, 224, 240, 0.45)' }}>
-                        {project.description}
-                    </p>
-
-                    <div className="flex flex-wrap gap-2 mb-6">
-                        {project.tags.map((tag) => (
-                            <span key={tag} className="glass-tag px-3 py-1 rounded-full text-xs"
-                                style={{ color: 'rgba(226, 224, 240, 0.5)' }}
-                            >
-                                {tag}
-                            </span>
-                        ))}
+                <div className="flex flex-col md:flex-row">
+                    {/* Visual Side */}
+                    <div className="w-full md:w-2/5 relative min-h-[250px] md:min-h-[500px] flex items-center justify-center p-8 overflow-hidden">
+                        <div className="absolute inset-0 opacity-20" style={{ background: project.gradient }} />
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#0f0d23] hidden md:block" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0f0d23] to-transparent block md:hidden" />
+                        
+                        <div className="relative z-10 w-full">
+                            {project.image ? (
+                                <img src={project.image} alt={project.title} className="w-full h-auto rounded-xl shadow-2xl border border-white/10 transform rotate-[-2deg] hover:rotate-0 transition-transform duration-500" />
+                            ) : (
+                                <div className="w-full aspect-square rounded-2xl flex items-center justify-center border border-white/10 bg-white/5 backdrop-blur-md transform rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
+                                    <FiLayers size={64} style={{ color: project.accent, opacity: 0.8 }} />
+                                </div>
+                            )}
+                        </div>
                     </div>
 
-                    <div className="flex gap-3">
-                        {project.liveUrl && project.liveUrl !== '#' && (
-                            <motion.a
-                                href={project.liveUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium cursor-hover"
-                                style={{
-                                    background: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-                                    color: '#fff',
-                                    boxShadow: '0 4px 20px rgba(99, 102, 241, 0.25)',
-                                }}
-                                whileHover={{ scale: 1.03 }}
-                                whileTap={{ scale: 0.97 }}
-                            >
-                                <FiExternalLink size={15} /> Live Demo
-                            </motion.a>
-                        )}
-                        {project.githubUrl && project.githubUrl !== '#' && (
-                            <motion.a
-                                href={project.githubUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium cursor-hover glass-btn"
-                                style={{ color: 'rgba(226, 224, 240, 0.7)' }}
-                                whileHover={{ scale: 1.03, color: '#e2e0f0' }}
-                                whileTap={{ scale: 0.97 }}
-                            >
-                                <FiGithub size={15} /> Source Code
-                            </motion.a>
-                        )}
+                    {/* Content Side */}
+                    <div className="w-full md:w-3/5 p-8 md:p-12 relative z-10">
+                        <motion.button
+                            onClick={onClose}
+                            className="absolute top-6 right-6 w-10 h-10 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white transition-all"
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                        >
+                            <FiX size={20} />
+                        </motion.button>
+
+                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-6" style={{ background: `${project.accent}15`, border: `1px solid ${project.accent}30` }}>
+                            <span className="w-2 h-2 rounded-full" style={{ background: project.accent, boxShadow: `0 0 10px ${project.accent}` }} />
+                            <span className="text-xs font-bold uppercase tracking-widest" style={{ color: project.accent }}>
+                                {project.category}
+                            </span>
+                        </div>
+
+                        <h2 className="text-3xl md:text-5xl font-black font-outfit mb-6 tracking-tight" style={{ color: '#fff' }}>
+                            {project.title}
+                        </h2>
+
+                        <p className="text-base md:text-lg leading-relaxed mb-8 font-light" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                            {project.description}
+                        </p>
+
+                        <div className="mb-10">
+                            <h4 className="text-xs font-bold uppercase tracking-widest text-white/40 mb-4">Technologies</h4>
+                            <div className="flex flex-wrap gap-2">
+                                {project.tags.map((tag) => (
+                                    <span key={tag} className="px-4 py-2 rounded-lg text-sm font-medium"
+                                        style={{ background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.08)', color: 'rgba(255,255,255,0.8)' }}
+                                    >
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="flex flex-wrap gap-4">
+                            {project.liveUrl && project.liveUrl !== '#' && (
+                                <motion.a
+                                    href={project.liveUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-sm font-bold tracking-wide uppercase"
+                                    style={{
+                                        background: project.accent,
+                                        color: '#fff',
+                                        boxShadow: `0 10px 30px -10px ${project.accent}`,
+                                    }}
+                                    whileHover={{ scale: 1.05, y: -2 }}
+                                    whileTap={{ scale: 0.95 }}
+                                >
+                                    <FiExternalLink size={18} /> View Live Project
+                                </motion.a>
+                            )}
+                            {project.githubUrl && project.githubUrl !== '#' && (
+                                <motion.a
+                                    href={project.githubUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl text-sm font-bold tracking-wide uppercase bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+                                    style={{ color: '#fff' }}
+                                    whileHover={{ scale: 1.05, y: -2 }}
+                                    whileTap={{ scale: 0.95 }}
+                                >
+                                    <FiGithub size={18} /> Source Code
+                                </motion.a>
+                            )}
+                        </div>
                     </div>
                 </div>
             </motion.div>
@@ -198,328 +308,100 @@ const ProjectModal = ({ project, onClose }) => {
     );
 };
 
-/* ── Featured Card ───────────────────────────────────────── */
-const FeaturedCard = ({ project, onClick }) => (
-    <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5 }}
-        onClick={onClick}
-        className="glass-card rounded-2xl overflow-hidden cursor-hover group mb-8"
-        data-cursor-hover
-    >
-        <div className="grid md:grid-cols-2 gap-0">
-            {/* Visual */}
-            <div
-                className="relative h-56 md:h-full min-h-[240px] overflow-hidden flex items-center justify-center"
-                style={{ background: project.gradient }}
-            >
-                {project.image ? (
-                    <>
-                        <img src={project.image} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                        <div className="absolute top-4 left-4 z-10">
-                            <span className="px-3 py-1 rounded-full text-[10px] font-medium tracking-wide uppercase shadow-lg"
-                                style={{ background: 'rgba(12, 10, 29, 0.7)', backdropFilter: 'blur(8px)', color: '#fff' }}
-                            >
-                                ★ Featured Project
-                            </span>
-                        </div>
-                    </>
-                ) : (
-                    <>
-                        {/* Animated floating elements */}
-                        <div className="absolute inset-0 overflow-hidden">
-                            <motion.div
-                                className="absolute w-32 h-32 rounded-full opacity-20"
-                                style={{ background: 'rgba(255,255,255,0.1)', top: '15%', left: '10%' }}
-                                animate={{ y: [0, -15, 0], x: [0, 10, 0] }}
-                                transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut' }}
-                            />
-                            <motion.div
-                                className="absolute w-20 h-20 rounded-full opacity-15"
-                                style={{ background: 'rgba(255,255,255,0.08)', bottom: '20%', right: '15%' }}
-                                animate={{ y: [0, 12, 0], x: [0, -8, 0] }}
-                                transition={{ repeat: Infinity, duration: 8, ease: 'easeInOut' }}
-                            />
-                            <motion.div
-                                className="absolute w-16 h-16 rounded-lg rotate-45 opacity-10"
-                                style={{ background: 'rgba(255,255,255,0.12)', top: '60%', left: '55%' }}
-                                animate={{ rotate: [45, 90, 45] }}
-                                transition={{ repeat: Infinity, duration: 10, ease: 'easeInOut' }}
-                            />
-                        </div>
-
-                        <motion.div
-                            className="relative z-10 text-center px-6"
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            whileInView={{ scale: 1, opacity: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: 0.2 }}
-                        >
-                            <div
-                                className="w-20 h-20 mx-auto mb-4 rounded-2xl flex items-center justify-center transition-transform duration-500 group-hover:scale-110"
-                                style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(10px)' }}
-                            >
-                                <FiLayers size={32} style={{ color: '#fff' }} />
-                            </div>
-                            <span className="px-3 py-1 rounded-full text-xs font-medium tracking-wide"
-                                style={{ background: 'rgba(255,255,255,0.15)', color: 'rgba(255,255,255,0.9)' }}
-                            >
-                                ★ Featured Project
-                            </span>
-                        </motion.div>
-                    </>
-                )}
-            </div>
-
-            {/* Content */}
-            <div className="p-6 md:p-8 flex flex-col justify-center">
-                <p className="text-[10px] tracking-wider uppercase mb-2 flex items-center gap-1"
-                    style={{ color: 'rgba(129, 140, 248, 0.6)' }}
-                >
-                    <FiLayers size={10} /> {project.category}
-                </p>
-                <h3 className="text-xl md:text-2xl font-bold font-outfit mb-3 transition-colors duration-300 group-hover:text-white"
-                    style={{ color: '#f0eef8' }}
-                >
-                    {project.title}
-                </h3>
-                <p className="text-sm leading-relaxed mb-5 line-clamp-3"
-                    style={{ color: 'rgba(226, 224, 240, 0.4)' }}
-                >
-                    {project.description}
-                </p>
-                <div className="flex flex-wrap gap-1.5 mb-5">
-                    {project.tags.map((tag) => (
-                        <span key={tag} className="px-2.5 py-0.5 rounded text-[10px]"
-                            style={{
-                                color: 'rgba(226, 224, 240, 0.4)',
-                                background: 'rgba(255, 255, 255, 0.03)',
-                                border: '1px solid rgba(255, 255, 255, 0.05)',
-                            }}
-                        >
-                            {tag}
-                        </span>
-                    ))}
-                </div>
-                <div className="flex items-center gap-3">
-                    {project.liveUrl && project.liveUrl !== '#' && (
-                        <a
-                            href={project.liveUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="inline-flex items-center gap-1.5 text-xs font-medium cursor-hover transition-colors"
-                            style={{ color: '#818cf8' }}
-                        >
-                            <FiExternalLink size={13} /> Live Demo
-                        </a>
-                    )}
-                    {project.githubUrl && project.githubUrl !== '#' && (
-                        <a
-                            href={project.githubUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="inline-flex items-center gap-1.5 text-xs font-medium cursor-hover transition-colors"
-                            style={{ color: 'rgba(226, 224, 240, 0.4)' }}
-                        >
-                            <FiGithub size={13} /> Source
-                        </a>
-                    )}
-                    <span className="ml-auto inline-flex items-center gap-1 text-[10px] tracking-wide uppercase font-medium transition-all group-hover:gap-2"
-                        style={{ color: 'rgba(226, 224, 240, 0.25)' }}
-                    >
-                        View Details <FiArrowUpRight size={11} />
-                    </span>
-                </div>
-            </div>
-        </div>
-    </motion.div>
-);
-
-/* ── Regular Card ────────────────────────────────────────── */
-const ProjectCard = ({ project, onClick }) => (
-    <motion.div
-        layout
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 10 }}
-        transition={{ duration: 0.3 }}
-        onClick={onClick}
-        className="glass-card rounded-xl overflow-hidden h-full cursor-hover group"
-        data-cursor-hover
-    >
-        {/* Visual Header */}
-        <div
-            className="relative h-36 overflow-hidden flex items-center justify-center"
-            style={{ background: project.gradient }}
-        >
-            {/* Subtle animated orb */}
-            <motion.div
-                className="absolute w-24 h-24 rounded-full opacity-15"
-                style={{ background: 'rgba(255,255,255,0.1)' }}
-                animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.08, 0.15] }}
-                transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
-            />
-            <div
-                className="relative z-10 w-12 h-12 rounded-xl flex items-center justify-center transition-transform duration-500 group-hover:scale-110"
-                style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)' }}
-            >
-                <FiLayers size={20} style={{ color: '#fff' }} />
-            </div>
-            <div className="absolute top-3 left-3">
-                <span className="px-2.5 py-1 rounded-full text-[10px] font-medium tracking-wide uppercase"
-                    style={{ background: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.85)' }}
-                >
-                    {project.category}
-                </span>
-            </div>
-        </div>
-
-        {/* Content */}
-        <div className="p-4">
-            <h3 className="text-sm font-semibold font-outfit mb-2" style={{ color: '#f0eef8' }}>
-                {project.title}
-            </h3>
-            <p className="text-xs leading-relaxed mb-3 line-clamp-2"
-                style={{ color: 'rgba(226, 224, 240, 0.35)' }}
-            >
-                {project.description}
-            </p>
-            <div className="flex flex-wrap gap-1.5 mb-3">
-                {project.tags.slice(0, 3).map((tag) => (
-                    <span key={tag} className="px-2 py-0.5 rounded text-[10px]"
-                        style={{
-                            color: 'rgba(226, 224, 240, 0.4)',
-                            background: 'rgba(255, 255, 255, 0.03)',
-                            border: '1px solid rgba(255, 255, 255, 0.05)',
-                        }}
-                    >
-                        {tag}
-                    </span>
-                ))}
-            </div>
-            <div className="flex items-center gap-3 pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-                {project.liveUrl && project.liveUrl !== '#' && (
-                    <a
-                        href={project.liveUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="inline-flex items-center gap-1 text-[10px] font-medium cursor-hover transition-colors"
-                        style={{ color: '#818cf8' }}
-                    >
-                        <FiExternalLink size={10} /> Live
-                    </a>
-                )}
-                {project.githubUrl && project.githubUrl !== '#' && (
-                    <a
-                        href={project.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="inline-flex items-center gap-1 text-[10px] font-medium cursor-hover transition-colors"
-                        style={{ color: 'rgba(226, 224, 240, 0.35)' }}
-                    >
-                        <FiGithub size={10} /> Code
-                    </a>
-                )}
-                <span className="ml-auto text-[10px] tracking-wide uppercase font-medium transition-all opacity-0 group-hover:opacity-100"
-                    style={{ color: 'rgba(226, 224, 240, 0.25)' }}
-                >
-                    <FiArrowUpRight size={12} />
-                </span>
-            </div>
-        </div>
-    </motion.div>
-);
-
 /* ── Main Section ────────────────────────────────────────── */
 const Projects = () => {
     const [active, setActive] = useState('All');
     const [selected, setSelected] = useState(null);
 
-    const featured = projects.find((p) => p.featured);
-    const nonFeatured = projects.filter((p) => !p.featured);
     const filtered = active === 'All'
-        ? nonFeatured
-        : nonFeatured.filter((p) => p.category === active);
+        ? projects
+        : projects.filter((p) => p.category === active);
 
     return (
-        <section id="my-projects" className="section-deep mesh-projects py-24 md:py-36 relative">
-            <div className="max-w-5xl mx-auto px-6 relative z-10">
+        <section id="my-projects" className="section-deep py-32 md:py-48 relative overflow-hidden">
+            {/* Ambient Background Elements */}
+            <div className="absolute top-1/4 -left-1/4 w-1/2 h-1/2 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
+
+            <div className="max-w-7xl mx-auto px-6 relative z-10">
                 {/* Header */}
-                <motion.p
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    className="text-xs tracking-[0.4em] uppercase mb-4 font-medium"
-                    style={{ color: 'rgba(129, 140, 248, 0.5)' }}
-                >
-                    Projects
-                </motion.p>
-
-                <motion.h2
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="text-3xl md:text-4xl font-bold font-outfit mb-4"
-                    style={{ color: '#f0eef8' }}
-                >
-                    Things I&apos;ve <span className="gradient-text">built</span>
-                </motion.h2>
-
-                <motion.p
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: 0.1 }}
-                    className="text-base md:text-lg mb-10 max-w-lg font-light"
-                    style={{ color: 'rgba(226, 224, 240, 0.4)' }}
-                >
-                    A collection of projects that showcase my skills in web development, IoT, and AI.
-                </motion.p>
-
-                {/* Featured */}
-                {featured && active === 'All' && (
-                    <FeaturedCard project={featured} onClick={() => setSelected(featured)} />
-                )}
-
-                {/* Filters */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    className="flex flex-wrap gap-2 mb-8"
-                >
-                    {categories.map((cat) => (
-                        <motion.button
-                            key={cat}
-                            onClick={() => setActive(cat)}
-                            className="px-4 py-2 rounded-full text-xs font-medium tracking-wide cursor-hover transition-all"
-                            style={{
-                                background: active === cat
-                                    ? 'linear-gradient(135deg, #6366f1, #8b5cf6)'
-                                    : 'rgba(255, 255, 255, 0.03)',
-                                color: active === cat ? '#fff' : 'rgba(226, 224, 240, 0.45)',
-                                border: active === cat ? 'none' : '1px solid rgba(255, 255, 255, 0.06)',
-                                boxShadow: active === cat ? '0 4px 15px rgba(99, 102, 241, 0.2)' : 'none',
-                            }}
-                            whileHover={{ scale: 1.03 }}
-                            whileTap={{ scale: 0.97 }}
+                <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 md:mb-24 gap-8">
+                    <div className="max-w-2xl">
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6"
                         >
-                            {cat}
-                        </motion.button>
-                    ))}
-                </motion.div>
+                            <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
+                            <span className="text-xs font-bold tracking-[0.2em] uppercase text-indigo-300">Portfolio</span>
+                        </motion.div>
+                        
+                        <motion.h2
+                            initial={{ opacity: 0, y: 30 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            className="text-4xl md:text-6xl lg:text-7xl font-black font-outfit mb-6 tracking-tight leading-tight"
+                            style={{ color: '#f0eef8' }}
+                        >
+                            Featured <br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
+                                Work & Projects.
+                            </span>
+                        </motion.h2>
+
+                        <motion.p
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.2 }}
+                            className="text-lg md:text-xl font-light text-white/50 max-w-xl"
+                        >
+                            A curated selection of my recent work, showcasing expertise in frontend development, UI/UX design, and complex web applications.
+                        </motion.p>
+                    </div>
+
+                    {/* Filters */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ delay: 0.3 }}
+                        className="flex flex-wrap gap-2 p-1.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md"
+                    >
+                        {categories.map((cat) => (
+                            <button
+                                key={cat}
+                                onClick={() => setActive(cat)}
+                                className="px-6 py-3 rounded-xl text-sm font-bold tracking-wide transition-all relative overflow-hidden"
+                                style={{
+                                    color: active === cat ? '#fff' : 'rgba(255,255,255,0.5)',
+                                }}
+                            >
+                                {active === cat && (
+                                    <motion.div
+                                        layoutId="activeFilter"
+                                        className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl"
+                                        initial={false}
+                                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                    />
+                                )}
+                                <span className="relative z-10">{cat}</span>
+                            </button>
+                        ))}
+                    </motion.div>
+                </div>
 
                 {/* Grid */}
-                <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <motion.div layout className="project-bento-grid">
                     <AnimatePresence mode="popLayout">
-                        {filtered.map((project) => (
-                            <ProjectCard key={project.id} project={project} onClick={() => setSelected(project)} />
+                        {filtered.map((project, index) => (
+                            <ProjectCard3D 
+                                key={project.id} 
+                                project={project} 
+                                index={index}
+                                onClick={() => setSelected(project)} 
+                            />
                         ))}
                     </AnimatePresence>
                 </motion.div>
@@ -528,15 +410,16 @@ const Projects = () => {
                 <AnimatePresence>
                     {filtered.length === 0 && (
                         <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="text-center py-16"
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            className="flex flex-col items-center justify-center py-32 rounded-3xl border border-white/5 bg-white/[0.02] backdrop-blur-sm mt-8"
                         >
-                            <FiLayers size={32} style={{ color: 'rgba(226, 224, 240, 0.15)', margin: '0 auto 12px' }} />
-                            <p className="text-sm" style={{ color: 'rgba(226, 224, 240, 0.3)' }}>
-                                No projects in this category yet.
-                            </p>
+                            <div className="w-20 h-20 mb-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                                <FiLayers size={32} className="text-white/30" />
+                            </div>
+                            <h3 className="text-xl font-bold font-outfit text-white/70 mb-2">No projects found</h3>
+                            <p className="text-white/40 text-sm">There are currently no projects in the {active} category.</p>
                         </motion.div>
                     )}
                 </AnimatePresence>

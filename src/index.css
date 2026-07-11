@@ -271,3 +271,93 @@ a, button, input, textarea, select, [role="button"] {
   background: rgba(129, 140, 248, 0.2);
   color: #e2e0f0;
 }
+
+/* ============================================================
+   3D GLOW CARDS
+   ============================================================ */
+
+.glow-card-wrapper {
+  position: relative;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.glow-card-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: radial-gradient(
+    800px circle at var(--mouse-x) var(--mouse-y),
+    rgba(255, 255, 255, 0.2),
+    transparent 40%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.5s;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.glow-card-wrapper:hover::before {
+  opacity: 1;
+}
+
+.glow-card-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    600px circle at var(--mouse-x) var(--mouse-y),
+    rgba(255, 255, 255, 0.04),
+    transparent 40%
+  );
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.5s;
+  pointer-events: none;
+}
+
+.glow-card-wrapper:hover::after {
+  opacity: 1;
+}
+
+.glow-modal-overlay {
+  background: rgba(8, 6, 18, 0.7);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+}
+
+.project-bento-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .project-bento-grid {
+    grid-template-columns: repeat(12, 1fr);
+    grid-auto-rows: minmax(320px, auto);
+  }
+  
+  .bento-item-featured {
+    grid-column: span 8;
+  }
+  
+  .bento-item-regular {
+    grid-column: span 4;
+  }
+  
+  .bento-item-wide {
+    grid-column: span 6;
+  }
+}
