@@ -24,7 +24,7 @@ const Footer = () => {
                         whileTap={{ scale: 0.95 }}
                     >
                         <h3 className="text-3xl font-bold font-outfit" style={{ color: '#f0eef8' }}>
-                            Rasyid<span style={{ color: 'rgba(129, 140, 248, 0.8)' }}>.dev</span>
+                            murashi<span style={{ color: 'rgba(129, 140, 248, 0.8)' }}>.dev</span>
                         </h3>
                     </motion.a>
 

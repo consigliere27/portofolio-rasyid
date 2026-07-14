@@ -82,18 +82,7 @@ const ProjectCard3D = ({ project, onClick, index }) => {
         y.set(0);
     };
 
-    // Determine Bento sizing based on index
-    let bentoClass = "bento-item-regular";
-    if (index === 0 || index === 1) {
-        bentoClass = "bento-item-wide"; // 2 sedang di atas (span 6)
-    } else if (index === 2) {
-        bentoClass = "bento-item-full"; // 1 sangat besar di bawah (span 12)
-    } else {
-        // Fallback if more items added
-        if (index % 3 === 0) bentoClass = "bento-item-wide";
-        else if (index % 3 === 1) bentoClass = "bento-item-wide";
-        else bentoClass = "bento-item-full";
-    }
+    // Cards will naturally align in the grid layout
 
     return (
         <motion.div
@@ -102,7 +91,7 @@ const ProjectCard3D = ({ project, onClick, index }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.6, delay: index * 0.1, ease: [0.23, 1, 0.32, 1] }}
-            className={`glow-card-wrapper cursor-pointer group ${bentoClass} flex flex-col h-full min-h-[220px]`}
+            className={`glow-card-wrapper cursor-pointer group flex flex-col h-full min-h-[220px]`}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             onClick={onClick}
@@ -346,15 +335,15 @@ const Projects = () => {
                 {/* Header */}
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-10 gap-6">
                     <div className="max-w-2xl">
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
+                        <motion.p
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-4"
+                            className="text-xs tracking-[0.4em] uppercase mb-4 font-medium"
+                            style={{ color: 'rgba(129, 140, 248, 0.8)' }}
                         >
-                            <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
-                            <span className="text-xs font-bold tracking-[0.2em] uppercase text-indigo-300">Portfolio</span>
-                        </motion.div>
+                            Portfolio
+                        </motion.p>
 
                         <motion.h2
                             initial={{ opacity: 0, y: 30 }}
@@ -411,8 +400,8 @@ const Projects = () => {
                     </motion.div>
                 </div>
 
-                {/* Grid */}
-                <motion.div layout className="project-bento-grid">
+                {/* Clean 3-Column Grid */}
+                <motion.div layout className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
                     <AnimatePresence mode="popLayout">
                         {filtered.map((project, index) => (
                             <ProjectCard3D
