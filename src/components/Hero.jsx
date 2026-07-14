@@ -137,7 +137,7 @@ const Hero = () => {
                     className="flex gap-5 justify-center"
                 >
                     {[
-                        { icon: FiLinkedin, href: 'https://www.linkedin.com/in/muhammad-rasyid-shiddiq-5749a6281' },
+                        { icon: FiLinkedin, href: 'https://www.linkedin.com/in/muhammad-rasyid-shiddiq' },
                         { icon: FiInstagram, href: 'https://instagram.com/rasyidshdqq' },
                         { icon: FiMail, href: 'mailto:rasyidforbusiness27@gmail.com' },
                     ].map((social, i) => (

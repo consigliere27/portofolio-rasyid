@@ -3,7 +3,7 @@ import { FiMail, FiMapPin, FiLinkedin, FiInstagram, FiArrowUpRight } from 'react
 
 const contacts = [
     { icon: FiMail, label: 'Email', value: 'rasyidforbusiness27@gmail.com', href: 'mailto:rasyidforbusiness27@gmail.com' },
-    { icon: FiLinkedin, label: 'LinkedIn', value: 'Muhammad Rasyid Shiddiq', href: 'https://www.linkedin.com/in/muhammad-rasyid-shiddiq-5749a6281' },
+    { icon: FiLinkedin, label: 'LinkedIn', value: 'Muhammad Rasyid Shiddiq', href: 'https://www.linkedin.com/in/muhammad-rasyid-shiddiq' },
     { icon: FiInstagram, label: 'Instagram', value: '@rasyidshdqq', href: 'https://instagram.com/rasyidshdqq' },
     { icon: FiMapPin, label: 'Location', value: 'Indonesia' },
 ];
