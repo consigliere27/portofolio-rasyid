@@ -102,7 +102,7 @@ const ProjectCard3D = ({ project, onClick, index }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.6, delay: index * 0.1, ease: [0.23, 1, 0.32, 1] }}
-            className={`glow-card-wrapper cursor-pointer group ${bentoClass} flex flex-col h-full min-h-[340px]`}
+            className={`glow-card-wrapper cursor-pointer group ${bentoClass} flex flex-col h-full min-h-[220px]`}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             onClick={onClick}
@@ -118,9 +118,9 @@ const ProjectCard3D = ({ project, onClick, index }) => {
                 style={{ background: `radial-gradient(circle at 50% 0%, ${project.accent}40, transparent 70%)` }}
             />
 
-            <div className="relative z-10 flex flex-col h-full p-6 md:p-8" style={{ transform: "translateZ(30px)" }}>
+            <div className="relative z-10 flex flex-col h-full p-5 md:p-6" style={{ transform: "translateZ(30px)" }}>
                 {/* Header */}
-                <div className="flex justify-between items-start mb-6">
+                <div className="flex justify-between items-start mb-4">
                     <div
                         className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
                         style={{ background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)' }}
