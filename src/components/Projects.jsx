@@ -11,7 +11,7 @@ const projects = [
         category: 'AI',
         description: 'Platform edukasi yang membantu orang awam belajar memerintah AI seperti ChatGPT dan Claude, cukup pakai bahasa sehari-hari. Tanpa ribet, tanpa koding.',
         tags: ['React', 'Vite', 'AI', 'Education'],
-        image: '/belajarpakaiai.png',
+        image: null,
         liveUrl: 'https://belajarpakaiai-web.vercel.app/',
         githubUrl: '#',
         featured: true,
@@ -31,6 +31,19 @@ const projects = [
         gradient: 'linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #6366f1 100%)',
         accent: '#06b6d4'
     },
+    {
+        id: 3,
+        title: 'CatatPengeluaranmu',
+        category: 'Web',
+        description: 'Aplikasi pencatatan pengeluaran pribadi yang membantu mengelola dan melacak keuangan harian dengan mudah.',
+        tags: ['Web', 'Finance', 'Tracker'],
+        image: null,
+        liveUrl: 'https://catatpengeluaranmu.vercel.app/',
+        githubUrl: '#',
+        featured: false,
+        gradient: 'linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%)',
+        accent: '#10b981'
+    },
 ];
 
 /* ── 3D Bento Card ───────────────────────────────────────── */
@@ -47,7 +60,7 @@ const ProjectCard3D = ({ project, onClick, index }) => {
     const handleMouseMove = (e) => {
         const { currentTarget, clientX, clientY } = e;
         const rect = currentTarget.getBoundingClientRect();
-        
+
         // Update CSS Variables for Glow Effect
         currentTarget.style.setProperty('--mouse-x', `${clientX - rect.left}px`);
         currentTarget.style.setProperty('--mouse-y', `${clientY - rect.top}px`);
@@ -59,7 +72,7 @@ const ProjectCard3D = ({ project, onClick, index }) => {
         const mouseY = clientY - rect.top;
         const xPct = mouseX / width - 0.5;
         const yPct = mouseY / height - 0.5;
-        
+
         x.set(xPct);
         y.set(yPct);
     };
@@ -70,11 +83,17 @@ const ProjectCard3D = ({ project, onClick, index }) => {
     };
 
     // Determine Bento sizing based on index
-    // index 0: span 8 (featured), index 1: span 4, index 2 & 3: span 6, etc.
     let bentoClass = "bento-item-regular";
-    if (index % 4 === 0) bentoClass = "bento-item-featured";
-    else if (index % 4 === 1) bentoClass = "bento-item-regular";
-    else bentoClass = "bento-item-wide";
+    if (index === 0 || index === 1) {
+        bentoClass = "bento-item-wide"; // 2 sedang di atas (span 6)
+    } else if (index === 2) {
+        bentoClass = "bento-item-full"; // 1 sangat besar di bawah (span 12)
+    } else {
+        // Fallback if more items added
+        if (index % 3 === 0) bentoClass = "bento-item-wide";
+        else if (index % 3 === 1) bentoClass = "bento-item-wide";
+        else bentoClass = "bento-item-full";
+    }
 
     return (
         <motion.div
@@ -87,22 +106,22 @@ const ProjectCard3D = ({ project, onClick, index }) => {
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             onClick={onClick}
-            style={{ 
-                rotateX, 
-                rotateY, 
+            style={{
+                rotateX,
+                rotateY,
                 transformStyle: "preserve-3d",
                 perspective: "1000px"
             }}
         >
-            <div 
+            <div
                 className="absolute inset-0 z-0 transition-opacity duration-500 opacity-20 group-hover:opacity-40"
                 style={{ background: `radial-gradient(circle at 50% 0%, ${project.accent}40, transparent 70%)` }}
             />
-            
+
             <div className="relative z-10 flex flex-col h-full p-6 md:p-8" style={{ transform: "translateZ(30px)" }}>
                 {/* Header */}
                 <div className="flex justify-between items-start mb-6">
-                    <div 
+                    <div
                         className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
                         style={{ background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.1)' }}
                     >
@@ -162,7 +181,7 @@ const ProjectCard3D = ({ project, onClick, index }) => {
                                 </span>
                             )}
                         </div>
-                        <motion.div 
+                        <motion.div
                             className="w-8 h-8 rounded-full flex items-center justify-center bg-white/5 border border-white/10 group-hover:bg-white/10 group-hover:scale-110 transition-all"
                             style={{ color: 'rgba(255,255,255,0.8)' }}
                         >
@@ -205,8 +224,8 @@ const ProjectModal = ({ project, onClose }) => {
                 exit={{ y: 20, opacity: 0, scale: 0.95 }}
                 transition={{ type: 'spring', damping: 25, stiffness: 300 }}
                 className="relative max-w-4xl w-full max-h-[90vh] overflow-y-auto rounded-3xl"
-                style={{ 
-                    background: 'rgba(15, 13, 35, 0.9)', 
+                style={{
+                    background: 'rgba(15, 13, 35, 0.9)',
                     border: '1px solid rgba(255,255,255,0.1)',
                     boxShadow: `0 30px 100px -20px ${project.accent}40`
                 }}
@@ -218,7 +237,7 @@ const ProjectModal = ({ project, onClose }) => {
                         <div className="absolute inset-0 opacity-20" style={{ background: project.gradient }} />
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#0f0d23] hidden md:block" />
                         <div className="absolute inset-0 bg-gradient-to-t from-[#0f0d23] to-transparent block md:hidden" />
-                        
+
                         <div className="relative z-10 w-full">
                             {project.image ? (
                                 <img src={project.image} alt={project.title} className="w-full h-auto rounded-xl shadow-2xl border border-white/10 transform rotate-[-2deg] hover:rotate-0 transition-transform duration-500" />
@@ -318,33 +337,33 @@ const Projects = () => {
         : projects.filter((p) => p.category === active);
 
     return (
-        <section id="my-projects" className="section-deep py-32 md:py-48 relative overflow-hidden">
+        <section id="my-projects" className="section-deep py-16 md:py-24 relative overflow-hidden">
             {/* Ambient Background Elements */}
             <div className="absolute top-1/4 -left-1/4 w-1/2 h-1/2 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
             <div className="absolute bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-purple-500/10 rounded-full blur-[120px] pointer-events-none" />
 
             <div className="max-w-7xl mx-auto px-6 relative z-10">
                 {/* Header */}
-                <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 md:mb-24 gap-8">
+                <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-10 gap-6">
                     <div className="max-w-2xl">
                         <motion.div
                             initial={{ opacity: 0, x: -20 }}
                             whileInView={{ opacity: 1, x: 0 }}
                             viewport={{ once: true }}
-                            className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-6"
+                            className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/5 border border-white/10 mb-4"
                         >
                             <span className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse" />
                             <span className="text-xs font-bold tracking-[0.2em] uppercase text-indigo-300">Portfolio</span>
                         </motion.div>
-                        
+
                         <motion.h2
                             initial={{ opacity: 0, y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            className="text-4xl md:text-6xl lg:text-7xl font-black font-outfit mb-6 tracking-tight leading-tight"
+                            className="text-3xl md:text-4xl lg:text-5xl font-black font-outfit mb-4 tracking-tight leading-tight"
                             style={{ color: '#f0eef8' }}
                         >
-                            Featured <br />
+                            Featured{' '}
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">
                                 Work & Projects.
                             </span>
@@ -355,7 +374,7 @@ const Projects = () => {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ delay: 0.2 }}
-                            className="text-lg md:text-xl font-light text-white/50 max-w-xl"
+                            className="text-sm md:text-base font-light text-white/50 max-w-xl"
                         >
                             A curated selection of my recent work, showcasing expertise in frontend development, UI/UX design, and complex web applications.
                         </motion.p>
@@ -373,7 +392,7 @@ const Projects = () => {
                             <button
                                 key={cat}
                                 onClick={() => setActive(cat)}
-                                className="px-6 py-3 rounded-xl text-sm font-bold tracking-wide transition-all relative overflow-hidden"
+                                className="px-4 py-2 rounded-xl text-xs font-bold tracking-wide transition-all relative overflow-hidden"
                                 style={{
                                     color: active === cat ? '#fff' : 'rgba(255,255,255,0.5)',
                                 }}
@@ -396,11 +415,11 @@ const Projects = () => {
                 <motion.div layout className="project-bento-grid">
                     <AnimatePresence mode="popLayout">
                         {filtered.map((project, index) => (
-                            <ProjectCard3D 
-                                key={project.id} 
-                                project={project} 
+                            <ProjectCard3D
+                                key={project.id}
+                                project={project}
                                 index={index}
-                                onClick={() => setSelected(project)} 
+                                onClick={() => setSelected(project)}
                             />
                         ))}
                     </AnimatePresence>

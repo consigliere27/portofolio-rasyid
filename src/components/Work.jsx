@@ -138,7 +138,7 @@ const Work = () => {
     const filtered = active === 'All' ? certifications : certifications.filter((c) => c.category === active);
 
     return (
-        <section id="projects" className="section-deep mesh-work py-24 md:py-36 relative">
+        <section id="projects" className="section-deep mesh-work py-16 md:py-20 relative">
             <div className="max-w-5xl mx-auto px-6 relative z-10">
                 {/* Header */}
                 <motion.p
@@ -155,7 +155,7 @@ const Work = () => {
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    className="text-3xl md:text-4xl font-bold font-outfit mb-10"
+                    className="text-3xl md:text-4xl font-bold font-outfit mb-7"
                     style={{ color: '#f0eef8' }}
                 >
                     Professional <span className="gradient-text">credentials</span>
@@ -166,7 +166,7 @@ const Work = () => {
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
-                    className="flex flex-wrap gap-2 mb-10"
+                    className="flex flex-wrap gap-2 mb-7"
                 >
                     {categories.map((cat) => (
                         <motion.button

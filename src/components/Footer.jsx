@@ -13,7 +13,7 @@ const Footer = () => {
         <footer className="section-deep mesh-footer relative">
             <div className="divider" />
 
-            <div className="max-w-5xl mx-auto px-6 py-8">
+            <div className="max-w-5xl mx-auto px-6 py-6">
                 <div className="flex flex-col items-center text-center gap-5">
                     {/* Brand */}
                     <motion.a
