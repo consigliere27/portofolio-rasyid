@@ -1,17 +1,48 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
 @import "tailwindcss";
 
 /* ============================================================
-   DEEP GLASSMORPHISM — Dark Rich + Frosted Glass
-   Deep navy backgrounds with luminous glass overlays
+   HARDCORE RETRO — Vintage Newspaper / Teletype Terminal
+   NO modern elements. Aged paper, heavy borders, ink grain.
    ============================================================ */
 
 @theme {
-  --font-family-outfit: 'Outfit', sans-serif;
-  --font-family-inter: 'Inter', sans-serif;
+  --font-family-special-elite: 'Special Elite', cursive;
+  --font-family-courier: 'Courier Prime', monospace;
 }
 
-/* Base */
+/* ============================================================
+   CSS VARIABLES
+   ============================================================ */
+:root {
+  /* Aged paper palette */
+  --ink:           #1a1308;
+  --ink-lt:        #2a1f0f;
+  --paper:         #c8a96e;
+  --paper-lt:      #d4b87a;
+  --paper-dk:      #b8955a;
+  --amber:         #c8860a;
+  --amber-lt:      #e8a020;
+  --rust:          #8b3a2a;
+  --sepia:         #3d2b0a;
+  --sepia-lt:      #5a4020;
+  --cream:         #e8d4a0;
+  --cream-dim:     rgba(232, 212, 160, 0.6);
+  --cream-muted:   rgba(232, 212, 160, 0.35);
+  --ink-on-paper:  #1a1308;
+  --border-heavy:  #3d2b0a;
+  --border-mid:    #5a4020;
+  --border-lt:     #7a5c30;
+
+  /* Green terminal variant for code/terminal elements */
+  --terminal-green: #4a7a3a;
+  --terminal-dim:   rgba(74, 122, 58, 0.7);
+}
+
+/* ============================================================
+   BASE — Aged paper background
+   ============================================================ */
+
 * {
   cursor: none !important;
   box-sizing: border-box;
@@ -24,386 +55,436 @@ html {
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Inter', sans-serif;
-  background: #0c0a1d;
-  color: #e2e0f0;
+  font-family: 'Courier Prime', monospace;
+  /* Aged paper background — warm sepia with paper color */
+  background-color: #1a1308;
+  background-image:
+    /* Heavy film grain */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.12'/%3E%3C/svg%3E"),
+    /* Warm paper tint */
+    linear-gradient(180deg, rgba(60, 40, 10, 0.95), rgba(25, 16, 5, 0.98));
+  color: var(--cream);
   overflow-x: hidden;
   min-height: 100vh;
+  position: relative;
 }
 
-a,
-button,
-input,
-textarea,
-select,
-[role="button"] {
+/* Heavy CRT scanlines — very visible */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9995;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.08) 3px,
+    rgba(0, 0, 0, 0.08) 4px
+  );
+}
+
+/* Aged paper vignette — strong */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9994;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 40%,
+    rgba(0, 0, 0, 0.55) 80%,
+    rgba(0, 0, 0, 0.75) 100%
+  );
+}
+
+a, button, input, textarea, select, [role="button"] {
   cursor: none !important;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(139, 92, 246, 0.25);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(139, 92, 246, 0.4);
-}
+/* ============================================================
+   SCROLLBAR — Vintage
+   ============================================================ */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #1a1308; border-left: 1px solid var(--border-heavy); }
+::-webkit-scrollbar-thumb { background: var(--sepia-lt); border: 1px solid var(--border-heavy); }
+::-webkit-scrollbar-thumb:hover { background: var(--amber); }
 
 /* ============================================================
-   SECTION BACKGROUNDS — Deep gradient meshes
+   SECTION BACKGROUNDS
    ============================================================ */
-
 .section-deep {
   position: relative;
-  background: #0c0a1d;
+  background: #1a1308;
 }
 
-.section-deep::before {
+/* Heavy top/bottom border rules on sections */
+.section-deep + .section-deep {
+  border-top: 3px double var(--border-heavy);
+}
+
+/* Mesh overlays — very subtle warm tints */
+.mesh-hero::before,
+.mesh-about::before,
+.mesh-work::before,
+.mesh-contact::before,
+.mesh-footer::before,
+.mesh-iot::before,
+.mesh-projects::before {
   content: '';
   position: absolute;
   inset: 0;
-  opacity: 0.5;
   pointer-events: none;
+  opacity: 0.3;
 }
 
-.mesh-hero::before {
-  background:
-    radial-gradient(ellipse 60% 50% at 20% 50%, rgba(99, 102, 241, 0.2) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 80% 30%, rgba(139, 92, 246, 0.15) 0%, transparent 55%),
-    radial-gradient(ellipse 40% 35% at 50% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+.mesh-hero::before    { background: radial-gradient(ellipse 50% 40% at 20% 40%, rgba(140, 90, 20, 0.12) 0%, transparent 60%); }
+.mesh-about::before   { background: radial-gradient(ellipse 45% 35% at 75% 35%, rgba(140, 90, 20, 0.1) 0%, transparent 55%); }
+.mesh-work::before    { background: radial-gradient(ellipse 40% 35% at 30% 40%, rgba(140, 90, 20, 0.08) 0%, transparent 55%); }
+.mesh-contact::before { background: radial-gradient(ellipse 45% 40% at 50% 40%, rgba(140, 90, 20, 0.1) 0%, transparent 55%); }
+.mesh-footer::before  { background: radial-gradient(ellipse 50% 35% at 50% 20%, rgba(140, 90, 20, 0.06) 0%, transparent 55%); }
+.mesh-projects::before{ background: radial-gradient(ellipse 45% 35% at 60% 35%, rgba(140, 90, 20, 0.08) 0%, transparent 55%); }
+.mesh-iot::before     { background: radial-gradient(ellipse 40% 35% at 40% 35%, rgba(60, 100, 50, 0.06) 0%, transparent 55%); }
+
+/* ============================================================
+   VINTAGE CARD SYSTEM — Newspaper / Teletype style
+   ============================================================ */
+
+/* Heavy bordered card — like a telegram */
+.retro-card {
+  background: rgba(30, 20, 8, 0.6);
+  border: 2px solid var(--border-heavy);
+  border-radius: 0;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 3px 3px 0 var(--ink);
 }
 
-.mesh-about::before {
-  background:
-    radial-gradient(ellipse 55% 45% at 70% 30%, rgba(139, 92, 246, 0.18) 0%, transparent 55%),
-    radial-gradient(ellipse 45% 40% at 20% 70%, rgba(6, 182, 212, 0.12) 0%, transparent 50%);
+.retro-card:hover {
+  border-color: var(--amber);
+  box-shadow: 4px 4px 0 var(--ink), 0 0 0 1px rgba(200, 134, 10, 0.2);
 }
 
-.mesh-work::before {
-  background:
-    radial-gradient(ellipse 50% 45% at 30% 40%, rgba(99, 102, 241, 0.15) 0%, transparent 55%),
-    radial-gradient(ellipse 45% 40% at 75% 65%, rgba(139, 92, 246, 0.12) 0%, transparent 50%);
+/* Panel with double border */
+.retro-panel {
+  background: rgba(30, 20, 8, 0.7);
+  border: 2px solid var(--border-mid);
+  border-radius: 0;
+  outline: 4px solid var(--border-heavy);
+  outline-offset: -6px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 4px 4px 0 #000;
 }
 
-.mesh-contact::before {
-  background:
-    radial-gradient(ellipse 55% 50% at 50% 40%, rgba(99, 102, 241, 0.18) 0%, transparent 55%),
-    radial-gradient(ellipse 40% 35% at 80% 70%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+/* Subtle card */
+.retro-subtle {
+  background: rgba(20, 13, 4, 0.5);
+  border: 1px solid var(--border-heavy);
+  border-radius: 0;
+  transition: all 0.2s ease;
+}
+.retro-subtle:hover {
+  border-color: var(--amber);
+  background: rgba(200, 134, 10, 0.06);
 }
 
-.mesh-footer::before {
-  background:
-    radial-gradient(ellipse 60% 40% at 40% 20%, rgba(99, 102, 241, 0.12) 0%, transparent 55%);
+/* Tag — like an old label */
+.retro-tag {
+  background: transparent;
+  border: 1px solid var(--border-mid);
+  border-radius: 0;
+  font-family: 'Courier Prime', monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  transition: all 0.2s ease;
+}
+.retro-tag:hover {
+  background: rgba(200, 134, 10, 0.1);
+  border-color: var(--amber);
+  color: var(--amber-lt) !important;
 }
 
-.mesh-iot::before {
-  background:
-    radial-gradient(ellipse 50% 45% at 40% 35%, rgba(6, 182, 212, 0.18) 0%, transparent 55%),
-    radial-gradient(ellipse 40% 35% at 75% 65%, rgba(99, 102, 241, 0.12) 0%, transparent 50%);
+/* Retro button — outline */
+.retro-btn {
+  background: transparent;
+  border: 2px solid var(--border-mid);
+  border-radius: 0;
+  font-family: 'Courier Prime', monospace;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  transition: all 0.15s ease;
+  box-shadow: 3px 3px 0 var(--ink);
+  position: relative;
+  top: 0;
+  left: 0;
+}
+.retro-btn:hover {
+  border-color: var(--amber);
+  color: var(--amber) !important;
+  box-shadow: 3px 3px 0 var(--amber);
+  top: -1px;
+  left: -1px;
+}
+.retro-btn:active {
+  top: 2px;
+  left: 2px;
+  box-shadow: 1px 1px 0 var(--ink);
 }
 
-.mesh-projects::before {
-  background:
-    radial-gradient(ellipse 55% 45% at 60% 35%, rgba(99, 102, 241, 0.18) 0%, transparent 55%),
-    radial-gradient(ellipse 40% 40% at 25% 70%, rgba(139, 92, 246, 0.14) 0%, transparent 50%);
+/* Primary button — filled amber, mechanical press */
+.retro-btn-primary {
+  background: var(--amber);
+  border: 2px solid var(--amber);
+  border-radius: 0;
+  color: var(--ink) !important;
+  font-family: 'Courier Prime', monospace;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 700;
+  transition: all 0.15s ease;
+  box-shadow: 4px 4px 0 #000;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+.retro-btn-primary:hover {
+  background: var(--amber-lt);
+  border-color: var(--amber-lt);
+  box-shadow: 5px 5px 0 #000;
+  top: -1px;
+  left: -1px;
+}
+.retro-btn-primary:active {
+  top: 3px;
+  left: 3px;
+  box-shadow: 1px 1px 0 #000;
+}
+
+/* Modal */
+.retro-modal {
+  background: #1e1408;
+  border: 3px solid var(--border-mid);
+  border-radius: 0;
+  box-shadow: 8px 8px 0 #000, 12px 12px 0 rgba(0,0,0,0.4);
+  position: relative;
+  overflow: hidden;
+}
+.retro-modal::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--amber);
 }
 
 /* ============================================================
-   GLASS COMPONENTS — Frosted translucent on deep bg
+   GLASS → RETRO ALIASES (backward compat for components not yet updated)
    ============================================================ */
-
-.glass {
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(24px) saturate(150%);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-}
-
-.glass-panel {
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(32px) saturate(160%);
-  -webkit-backdrop-filter: blur(32px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 20px;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
-  position: relative;
-  overflow: hidden;
-}
-
-.glass-panel::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  z-index: 1;
-}
-
-.glass-card {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(16px) saturate(140%);
-  -webkit-backdrop-filter: blur(16px) saturate(140%);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 14px;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  overflow: hidden;
-}
-
-.glass-card:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(99, 102, 241, 0.04);
-  transform: translateY(-2px);
-}
-
-.glass-subtle {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  transition: all 0.3s ease;
-}
-
-.glass-subtle:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.08);
-}
-
-.glass-tag {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 0.3s ease;
-}
-
-.glass-tag:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.12);
-}
-
-.glass-btn {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 0.3s ease;
-}
-
-.glass-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.12);
-}
-
-.glass-modal {
-  background: rgba(15, 13, 35, 0.85);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
-  position: relative;
-  overflow: hidden;
-}
-
-.glass-modal::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-  z-index: 1;
-}
+.glass         { background: rgba(30,20,8,0.6); border: 2px solid var(--border-heavy); border-radius:0; }
+.glass-panel   { background: rgba(30,20,8,0.7); border: 2px solid var(--border-mid); border-radius:0; box-shadow:4px 4px 0 #000; position:relative; overflow:hidden; }
+.glass-card    { background: rgba(30,20,8,0.6); border: 2px solid var(--border-heavy); border-radius:0; transition:all .2s ease; position:relative; overflow:hidden; box-shadow:3px 3px 0 #000; }
+.glass-card:hover { border-color:var(--amber); box-shadow:4px 4px 0 #000; }
+.glass-subtle  { background: rgba(20,13,4,0.5); border: 1px solid var(--border-heavy); border-radius:0; transition:all .2s ease; }
+.glass-subtle:hover { border-color:var(--amber); background:rgba(200,134,10,0.06); }
+.glass-tag     { background:transparent; border:1px solid var(--border-mid); border-radius:0; font-family:'Courier Prime',monospace; transition:all .2s ease; }
+.glass-tag:hover { background:rgba(200,134,10,0.1); border-color:var(--amber); }
+.glass-btn     { background:transparent; border:2px solid var(--border-mid); border-radius:0; font-family:'Courier Prime',monospace; transition:all .2s ease; box-shadow:3px 3px 0 #000; }
+.glass-btn:hover { border-color:var(--amber); }
+.glass-modal   { background:#1e1408; border:3px solid var(--border-mid); border-radius:0; box-shadow:8px 8px 0 #000; position:relative; overflow:hidden; }
+.glass-modal::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:var(--amber); }
+.glow-card-wrapper { position:relative; border-radius:0; background:rgba(30,20,8,0.6); border:2px solid var(--border-heavy); overflow:hidden; isolation:isolate; box-shadow:3px 3px 0 #000; }
+.glow-card-wrapper:hover { border-color:var(--amber); box-shadow:4px 4px 0 #000; }
+.glow-modal-overlay { background:rgba(5, 3, 0, 0.92); }
 
 /* ============================================================
    TEXT
    ============================================================ */
 
+/* Flat amber — no modern gradient */
 .gradient-text {
-  background: linear-gradient(135deg, #818cf8, #a78bfa, #c084fc);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--amber);
+  -webkit-text-fill-color: var(--amber);
+  background: none;
+  background-clip: unset;
+  -webkit-background-clip: unset;
+  text-shadow: 0 0 20px rgba(200, 134, 10, 0.3);
 }
 
-.text-muted {
-  color: rgba(226, 224, 240, 0.5);
-}
-
-.text-secondary {
-  color: rgba(226, 224, 240, 0.7);
-}
+.text-muted    { color: var(--cream-muted); }
+.text-secondary{ color: var(--cream-dim); }
 
 /* ============================================================
-   DIVIDER
+   DIVIDERS — Heavy newspaper rules
    ============================================================ */
 
 .divider {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+  height: 3px;
+  background: var(--border-heavy);
+  border-top: 1px solid var(--border-mid);
+  border-bottom: 1px solid rgba(0,0,0,0.5);
+}
+
+/* Newspaper-style triple rule */
+.divider-heavy {
+  border: none;
+  border-top: 4px double var(--border-mid);
+  margin: 0;
 }
 
 /* ============================================================
-   ANIMATIONS
+   SECTION HEADER — Newspaper masthead style
+   ============================================================ */
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.section-label::before,
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-mid);
+}
+
+.section-label-text {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.65rem;
+  color: var(--amber);
+  text-transform: uppercase;
+  letter-spacing: 0.5em;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   ANIMATIONS — Slow, organic
    ============================================================ */
 
 @keyframes float-orb-1 {
-
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-
-  33% {
-    transform: translate(30px, -40px) scale(1.05);
-  }
-
-  66% {
-    transform: translate(-20px, -80px) scale(0.95);
-  }
+  0%, 100% { transform: translate(0, 0); }
+  50%       { transform: translate(20px, -30px); }
 }
-
 @keyframes float-orb-2 {
-
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-
-  33% {
-    transform: translate(-35px, -25px) scale(0.95);
-  }
-
-  66% {
-    transform: translate(40px, -60px) scale(1.05);
-  }
+  0%, 100% { transform: translate(0, 0); }
+  50%       { transform: translate(-20px, -20px); }
 }
-
 @keyframes float-orb-3 {
-
-  0%,
-  100% {
-    transform: translate(0, 0);
-  }
-
-  50% {
-    transform: translate(50px, -35px);
-  }
+  0%, 100% { transform: translate(0, 0); }
+  50%       { transform: translate(25px, -15px); }
 }
 
-/* Typewriter cursor */
+/* Terminal cursor blink — harsh step */
+@keyframes blink {
+  0%, 49%  { opacity: 1; }
+  50%, 100%{ opacity: 0; }
+}
+
+/* Old screen flicker */
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  88%      { opacity: 1; }
+  89%      { opacity: 0.88; }
+  90%      { opacity: 1; }
+  95%      { opacity: 0.94; }
+  96%      { opacity: 1; }
+}
+
+/* Stamp appear — heavy press */
+@keyframes stamp-in {
+  0%   { transform: scale(1.5) rotate(-5deg); opacity: 0; }
+  60%  { transform: scale(0.92) rotate(2deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* Typewriter cursor — amber block */
 .Typewriter__cursor {
-  color: #818cf8;
-  font-weight: 100;
+  color: var(--amber);
+  font-weight: 700;
+  animation: blink 0.8s step-end infinite;
 }
 
 /* Selection */
 ::selection {
-  background: rgba(129, 140, 248, 0.2);
-  color: #e2e0f0;
+  background: rgba(200, 134, 10, 0.35);
+  color: var(--cream);
+}
+
+/* Subtle page flicker */
+main {
+  animation: flicker 10s infinite;
 }
 
 /* ============================================================
-   3D GLOW CARDS
+   BENTO GRID
    ============================================================ */
-
-.glow-card-wrapper {
-  position: relative;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.03);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  overflow: hidden;
-  isolation: isolate;
-}
-
-.glow-card-wrapper::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
-  background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y),
-      rgba(255, 255, 255, 0.2),
-      transparent 40%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  opacity: 0;
-  transition: opacity 0.5s;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.glow-card-wrapper:hover::before {
-  opacity: 1;
-}
-
-.glow-card-wrapper::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y),
-      rgba(255, 255, 255, 0.04),
-      transparent 40%);
-  z-index: -1;
-  opacity: 0;
-  transition: opacity 0.5s;
-  pointer-events: none;
-}
-
-.glow-card-wrapper:hover::after {
-  opacity: 1;
-}
-
-.glow-modal-overlay {
-  background: rgba(8, 6, 18, 0.7);
-  backdrop-filter: blur(24px) saturate(150%);
-  -webkit-backdrop-filter: blur(24px) saturate(150%);
-}
-
 .project-bento-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 0.875rem;
+  gap: 1rem;
 }
 
 @media (min-width: 1024px) {
-  .project-bento-grid {
-    grid-template-columns: repeat(12, 1fr);
-    grid-auto-rows: minmax(200px, auto);
-  }
+  .project-bento-grid { grid-template-columns: repeat(12, 1fr); grid-auto-rows: minmax(200px, auto); }
+  .bento-item-featured { grid-column: span 8; }
+  .bento-item-regular  { grid-column: span 4; }
+  .bento-item-wide     { grid-column: span 6; }
+  .bento-item-full     { grid-column: span 12; }
+}
 
-  .bento-item-featured {
-    grid-column: span 8;
-  }
+/* ============================================================
+   NEWSPAPER LAYOUT UTILITIES
+   ============================================================ */
 
-  .bento-item-regular {
-    grid-column: span 4;
-  }
+/* Heavy double-border box */
+.newspaper-box {
+  border: 2px solid var(--border-mid);
+  outline: 4px solid var(--border-heavy);
+  outline-offset: -7px;
+  padding: 1.5rem;
+  position: relative;
+}
 
-  .bento-item-wide {
-    grid-column: span 6;
-  }
+/* Ruled underline for headings */
+.headline-rule {
+  border-bottom: 3px double var(--border-mid);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
 
-  .bento-item-full {
-    grid-column: span 12;
-  }
+/* Corner ornament */
+.corner-box {
+  position: relative;
+}
+.corner-box::before,
+.corner-box::after {
+  content: '✦';
+  position: absolute;
+  font-size: 0.5rem;
+  color: var(--amber);
+  opacity: 0.5;
+}
+.corner-box::before { top: 6px; left: 8px; }
+.corner-box::after  { bottom: 6px; right: 8px; }
+
+/* Stamp mark */
+.retro-stamp {
+  display: inline-block;
+  border: 2px solid var(--amber);
+  padding: 4px 10px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.6rem;
+  color: var(--amber);
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  transform: rotate(-2deg);
+  opacity: 0.7;
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
 }

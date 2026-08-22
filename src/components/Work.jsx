@@ -16,55 +16,119 @@ const certifications = [
     { id: 9, title: 'Introduction to Financial Literacy', category: 'Finance', issuer: 'Dicoding Indonesia', image: '/cert-dicoding-financial.png', description: 'Sertifikat Kompetensi untuk kelas Introduction to Financial Literacy.', tags: ['Finance'], verifyUrl: 'https://dicoding.com/certificates/N9ZO21886PG5' },
 ];
 
+/* ── Modal ── */
 const CertModal = ({ cert, onClose }) => {
     if (!cert) return null;
-
     return (
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
-            style={{ backgroundColor: 'rgba(12, 10, 29, 0.8)', backdropFilter: 'blur(16px)' }}
+            style={{ backgroundColor: 'rgba(5, 3, 0, 0.93)' }}
             onClick={onClose}
         >
             <motion.div
-                initial={{ scale: 0.95, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.95, opacity: 0 }}
-                transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                className="glass-modal max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                initial={{ scale: 0.95, opacity: 0, y: 15 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.95, opacity: 0, y: 15 }}
+                transition={{ type: 'spring', damping: 28, stiffness: 280 }}
+                className="max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                style={{
+                    background: '#0e0900',
+                    border: '2px solid var(--border-mid)',
+                    boxShadow: '8px 8px 0 #000, 12px 12px 0 rgba(0,0,0,0.4)',
+                }}
                 onClick={(e) => e.stopPropagation()}
             >
-                {/* Image */}
-                <div className="relative h-48 sm:h-64 overflow-hidden rounded-t-[20px]" style={{ backgroundColor: 'rgba(255, 255, 255, 0.03)' }}>
-                    <img src={cert.image} alt={cert.title} className="w-full h-full object-contain p-6" />
+                {/* Modal title bar */}
+                <div style={{
+                    background: 'var(--amber)',
+                    padding: '5px 12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                }}>
+                    <span style={{
+                        fontFamily: "'Courier Prime', monospace",
+                        fontSize: '0.6rem',
+                        color: '#0a0700',
+                        fontWeight: '700',
+                        letterSpacing: '0.2em',
+                        textTransform: 'uppercase',
+                    }}>
+                        CERTIFICATE DETAIL
+                    </span>
                     <motion.button
                         onClick={onClose}
-                        className="absolute top-4 right-4 p-2 rounded-full cursor-hover"
-                        style={{ color: 'rgba(226, 224, 240, 0.5)', background: 'rgba(255, 255, 255, 0.05)' }}
-                        whileHover={{ scale: 1.1, color: '#e2e0f0' }}
+                        className="cursor-hover"
+                        style={{
+                            background: 'rgba(0,0,0,0.2)',
+                            border: '1px solid rgba(0,0,0,0.3)',
+                            color: '#0a0700',
+                            width: '20px', height: '20px',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                            fontFamily: 'monospace',
+                        }}
+                        whileHover={{ background: 'rgba(0,0,0,0.4)' }}
                         whileTap={{ scale: 0.9 }}
                     >
-                        <FiX size={18} />
+                        <FiX size={12} />
                     </motion.button>
                 </div>
 
+                {/* Image */}
+                <div style={{
+                    height: '200px',
+                    background: 'rgba(20,13,4,0.8)',
+                    borderBottom: '1px solid var(--border-heavy)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    overflow: 'hidden',
+                }}>
+                    <img src={cert.image} alt={cert.title} style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', padding: '1rem' }} />
+                </div>
+
                 {/* Content */}
-                <div className="p-6 relative z-10">
-                    <p className="text-xs tracking-wider uppercase mb-2 flex items-center gap-1.5" style={{ color: '#818cf8' }}>
-                        <FiAward size={14} /> {cert.issuer}
+                <div style={{ padding: '1.25rem' }}>
+                    <p style={{
+                        fontFamily: "'Courier Prime', monospace",
+                        fontSize: '0.6rem',
+                        color: 'var(--amber)',
+                        letterSpacing: '0.3em',
+                        textTransform: 'uppercase',
+                        marginBottom: '0.4rem',
+                        display: 'flex', alignItems: 'center', gap: '0.4rem',
+                    }}>
+                        <FiAward size={11} /> {cert.issuer}
                     </p>
-                    <h3 className="text-xl font-bold font-outfit mb-3" style={{ color: '#f0eef8' }}>
+                    <h3 style={{
+                        fontFamily: "'Special Elite', cursive",
+                        fontSize: '1.4rem',
+                        color: 'var(--cream)',
+                        marginBottom: '0.75rem',
+                        borderBottom: '1px solid var(--border-heavy)',
+                        paddingBottom: '0.5rem',
+                    }}>
                         {cert.title}
                     </h3>
-                    <p className="text-sm leading-relaxed mb-6" style={{ color: 'rgba(226, 224, 240, 0.45)' }}>
+                    <p style={{
+                        fontFamily: "'Courier Prime', monospace",
+                        fontSize: '0.82rem',
+                        color: 'var(--cream-muted)',
+                        fontStyle: 'italic',
+                        lineHeight: '1.7',
+                        marginBottom: '1rem',
+                    }}>
                         {cert.description}
                     </p>
 
-                    <div className="flex flex-wrap gap-2 mb-6">
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '1.25rem' }}>
                         {cert.tags.map((tag) => (
-                            <span key={tag} className="glass-tag px-3 py-1 rounded-full text-xs" style={{ color: 'rgba(226, 224, 240, 0.5)' }}>
+                            <span key={tag} className="retro-tag" style={{
+                                padding: '2px 8px',
+                                color: 'var(--cream-dim)',
+                                fontSize: '0.65rem',
+                            }}>
                                 {tag}
                             </span>
                         ))}
@@ -74,12 +138,18 @@ const CertModal = ({ cert, onClose }) => {
                         href={cert.verifyUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium cursor-hover"
-                        style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', color: '#fff', boxShadow: '0 4px 20px rgba(99, 102, 241, 0.25)' }}
-                        whileHover={{ scale: 1.03 }}
-                        whileTap={{ scale: 0.97 }}
+                        className="retro-btn-primary cursor-hover"
+                        style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            padding: '0.6rem 1.5rem',
+                            fontSize: '0.65rem',
+                            textDecoration: 'none',
+                        }}
+                        whileTap={{ x: 4, y: 4 }}
                     >
-                        <FiExternalLink size={15} /> View Certificate
+                        <FiExternalLink size={12} /> [ VERIFY CERTIFICATE ]
                     </motion.a>
                 </div>
             </motion.div>
@@ -87,42 +157,94 @@ const CertModal = ({ cert, onClose }) => {
     );
 };
 
+/* ── Cert Card ── */
 const CertCard = ({ cert, onClick }) => (
     <motion.div
         layout
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 10 }}
-        transition={{ duration: 0.3 }}
+        exit={{ opacity: 0, y: 8 }}
+        transition={{ duration: 0.25 }}
         onClick={onClick}
-        className="glass-card rounded-xl overflow-hidden h-full cursor-hover group"
-        data-cursor-hover
+        className="cursor-hover group"
+        style={{
+            background: 'rgba(14, 9, 0, 0.7)',
+            border: '2px solid var(--border-heavy)',
+            boxShadow: '3px 3px 0 #000',
+            overflow: 'hidden',
+            transition: 'border-color 0.2s ease, box-shadow 0.2s ease',
+            cursor: 'pointer',
+        }}
+        whileHover={{
+            borderColor: 'var(--amber)',
+        }}
     >
-        <div className="relative h-44 overflow-hidden" style={{ backgroundColor: 'rgba(255, 255, 255, 0.02)' }}>
+        {/* Image */}
+        <div style={{
+            height: '160px',
+            background: 'rgba(20,13,4,0.6)',
+            borderBottom: '1px solid var(--border-heavy)',
+            overflow: 'hidden',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            position: 'relative',
+        }}>
             <img
                 src={cert.image}
                 alt={cert.title}
-                className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-[1.03]"
+                style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain', padding: '0.75rem' }}
+                className="transition-transform duration-500 group-hover:scale-[1.03]"
             />
-            <div className="absolute top-3 left-3">
-                <span className="glass-tag px-2.5 py-1 rounded-full text-[10px] font-medium tracking-wide uppercase" style={{ color: '#818cf8' }}>
-                    {cert.category}
-                </span>
+            {/* Category badge — top left */}
+            <div style={{
+                position: 'absolute', top: '8px', left: '8px',
+                background: 'rgba(10,7,0,0.85)',
+                border: '1px solid var(--border-mid)',
+                padding: '2px 7px',
+            }}>
+                <span style={{
+                    fontFamily: "'Courier Prime', monospace",
+                    fontSize: '0.55rem',
+                    color: 'var(--amber)',
+                    letterSpacing: '0.2em',
+                    textTransform: 'uppercase',
+                }}>{cert.category}</span>
             </div>
         </div>
 
-        <div className="p-4">
-            <p className="text-[10px] tracking-wider uppercase mb-1.5 flex items-center gap-1" style={{ color: 'rgba(226, 224, 240, 0.35)' }}>
-                <FiAward size={10} /> {cert.issuer}
+        {/* Info */}
+        <div style={{ padding: '0.75rem' }}>
+            <p style={{
+                fontFamily: "'Courier Prime', monospace",
+                fontSize: '0.55rem',
+                color: 'var(--amber)',
+                letterSpacing: '0.25em',
+                textTransform: 'uppercase',
+                marginBottom: '0.3rem',
+                display: 'flex', alignItems: 'center', gap: '0.3rem',
+                opacity: 0.75,
+            }}>
+                <FiAward size={9} /> {cert.issuer}
             </p>
-            <h3 className="text-sm font-semibold font-outfit mb-2" style={{ color: '#f0eef8' }}>
+            <h3 style={{
+                fontFamily: "'Special Elite', cursive",
+                fontSize: '0.9rem',
+                color: 'var(--cream)',
+                marginBottom: '0.5rem',
+                lineHeight: 1.3,
+            }}>
                 {cert.title}
             </h3>
-            <div className="flex flex-wrap gap-1.5">
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem' }}>
                 {cert.tags.map((tag) => (
-                    <span key={tag} className="px-2 py-0.5 rounded text-[10px]"
-                        style={{ color: 'rgba(226, 224, 240, 0.4)', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.05)' }}
-                    >
+                    <span key={tag} style={{
+                        fontFamily: "'Courier Prime', monospace",
+                        fontSize: '0.55rem',
+                        color: 'var(--cream-muted)',
+                        border: '1px solid var(--border-heavy)',
+                        padding: '1px 6px',
+                        letterSpacing: '0.08em',
+                        textTransform: 'uppercase',
+                    }}>
                         {tag}
                     </span>
                 ))}
@@ -131,56 +253,86 @@ const CertCard = ({ cert, onClick }) => (
     </motion.div>
 );
 
+/* ── Main ── */
 const Work = () => {
     const [active, setActive] = useState('All');
     const [selected, setSelected] = useState(null);
-
     const filtered = active === 'All' ? certifications : certifications.filter((c) => c.category === active);
 
     return (
         <section id="projects" className="section-deep mesh-work py-16 md:py-20 relative">
             <div className="max-w-5xl mx-auto px-6 relative z-10">
-                {/* Header */}
-                <motion.p
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    className="text-xs tracking-[0.4em] uppercase mb-4 font-medium"
-                    style={{ color: 'rgba(129, 140, 248, 0.5)' }}
-                >
-                    Certifications
-                </motion.p>
 
-                <motion.h2
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    className="text-3xl md:text-4xl font-bold font-outfit mb-7"
-                    style={{ color: '#f0eef8' }}
-                >
-                    Professional <span className="gradient-text">credentials</span>
-                </motion.h2>
-
-                {/* Filters */}
+                {/* Section label */}
                 <motion.div
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
-                    className="flex flex-wrap gap-2 mb-7"
+                    style={{ marginBottom: '0.75rem' }}
+                >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        <div style={{ flex: 1, height: '1px', background: 'var(--border-mid)' }} />
+                        <span style={{
+                            fontFamily: "'Courier Prime', monospace",
+                            fontSize: '0.6rem',
+                            color: 'var(--amber)',
+                            letterSpacing: '0.5em',
+                            textTransform: 'uppercase',
+                        }}>✦ Certifications ✦</span>
+                        <div style={{ flex: 1, height: '1px', background: 'var(--border-mid)' }} />
+                    </div>
+                </motion.div>
+
+                {/* Headline */}
+                <motion.div
+                    initial={{ opacity: 0, y: 12 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    style={{
+                        borderBottom: '3px double var(--border-mid)',
+                        paddingBottom: '0.6rem',
+                        marginBottom: '1.5rem',
+                    }}
+                >
+                    <h2 style={{
+                        fontFamily: "'Special Elite', cursive",
+                        fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
+                        color: 'var(--cream)',
+                        margin: 0,
+                        textShadow: '1px 1px 0 rgba(0,0,0,0.8)',
+                    }}>
+                        Professional <span style={{ color: 'var(--amber)' }}>credentials</span>
+                    </h2>
+                </motion.div>
+
+                {/* Filter tabs — typewriter keyboard style */}
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem', marginBottom: '1.5rem' }}
                 >
                     {categories.map((cat) => (
                         <motion.button
                             key={cat}
                             onClick={() => setActive(cat)}
-                            className="px-4 py-2 rounded-full text-xs font-medium tracking-wide cursor-hover transition-all"
+                            className="cursor-hover"
                             style={{
-                                background: active === cat ? 'linear-gradient(135deg, #6366f1, #8b5cf6)' : 'rgba(255, 255, 255, 0.03)',
-                                color: active === cat ? '#fff' : 'rgba(226, 224, 240, 0.45)',
-                                border: active === cat ? 'none' : '1px solid rgba(255, 255, 255, 0.06)',
-                                boxShadow: active === cat ? '0 4px 15px rgba(99, 102, 241, 0.2)' : 'none',
+                                fontFamily: "'Courier Prime', monospace",
+                                fontSize: '0.65rem',
+                                letterSpacing: '0.15em',
+                                textTransform: 'uppercase',
+                                padding: '0.4rem 1rem',
+                                background: active === cat ? 'var(--amber)' : 'rgba(10,7,0,0.5)',
+                                color: active === cat ? '#0a0700' : 'var(--cream-muted)',
+                                border: active === cat ? '2px solid var(--amber)' : '1px solid var(--border-mid)',
+                                boxShadow: active === cat ? '3px 3px 0 #000' : '2px 2px 0 rgba(0,0,0,0.5)',
+                                fontWeight: active === cat ? '700' : '400',
+                                transition: 'all 0.15s ease',
+                                position: 'relative',
+                                top: active === cat ? '0' : '0',
                             }}
-                            whileHover={{ scale: 1.03 }}
-                            whileTap={{ scale: 0.97 }}
+                            whileTap={{ x: 2, y: 2 }}
                         >
                             {cat}
                         </motion.button>
@@ -188,7 +340,14 @@ const Work = () => {
                 </motion.div>
 
                 {/* Grid */}
-                <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <motion.div
+                    layout
+                    style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+                        gap: '0.75rem',
+                    }}
+                >
                     <AnimatePresence mode="popLayout">
                         {filtered.map((cert) => (
                             <CertCard key={cert.id} cert={cert} onClick={() => setSelected(cert)} />

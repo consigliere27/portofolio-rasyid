@@ -13,12 +13,12 @@ const CustomCursor = () => {
 
         const over = (e) => {
             const t = e.target;
-            if (t.tagName === 'A' || t.tagName === 'BUTTON' || t.closest('a') || t.closest('button') || t.closest('[data-cursor-hover]') || t.classList.contains('cursor-hover'))
+            if (t.tagName === 'A' || t.tagName === 'BUTTON' || t.closest('a') || t.closest('button') || t.classList.contains('cursor-hover'))
                 setHover(true);
         };
         const out = (e) => {
             const t = e.target;
-            if (t.tagName === 'A' || t.tagName === 'BUTTON' || t.closest('a') || t.closest('button') || t.closest('[data-cursor-hover]') || t.classList.contains('cursor-hover'))
+            if (t.tagName === 'A' || t.tagName === 'BUTTON' || t.closest('a') || t.closest('button') || t.classList.contains('cursor-hover'))
                 setHover(false);
         };
 
@@ -38,28 +38,43 @@ const CustomCursor = () => {
 
     return (
         <>
-            {/* Dot */}
+            {/* Crosshair dot — square, no border-radius */}
             <motion.div
-                className="fixed top-0 left-0 w-2 h-2 rounded-full pointer-events-none z-[9999]"
-                style={{ background: hover ? '#818cf8' : 'rgba(226, 224, 240, 0.6)' }}
-                animate={{
-                    x: pos.x - 4,
-                    y: pos.y - 4,
-                    scale: click ? 0.7 : hover ? 1.5 : 1,
+                className="fixed top-0 left-0 pointer-events-none z-[9999]"
+                style={{
+                    width: click ? '5px' : hover ? '10px' : '6px',
+                    height: click ? '5px' : hover ? '10px' : '6px',
+                    background: hover ? 'var(--amber)' : 'var(--cream)',
+                    borderRadius: 0,
+                    boxShadow: hover ? '0 0 6px rgba(200,134,10,0.6), 0 0 12px rgba(200,134,10,0.3)' : 'none',
+                    transition: 'width 0.1s, height 0.1s, background 0.15s',
                 }}
-                transition={{ type: 'spring', stiffness: 600, damping: 30, mass: 0.3 }}
+                animate={{
+                    x: pos.x - (hover ? 5 : 3),
+                    y: pos.y - (hover ? 5 : 3),
+                    scale: click ? 0.5 : 1,
+                }}
+                transition={{ type: 'spring', stiffness: 800, damping: 35, mass: 0.2 }}
             />
-            {/* Ring */}
+
+            {/* Outer crosshair — square, thick border */}
             <motion.div
-                className="fixed top-0 left-0 w-8 h-8 rounded-full pointer-events-none z-[9998] border"
-                style={{ borderColor: hover ? 'rgba(129, 140, 248, 0.4)' : 'rgba(226, 224, 240, 0.08)' }}
-                animate={{
-                    x: pos.x - 16,
-                    y: pos.y - 16,
-                    scale: click ? 0.9 : hover ? 1.6 : 1,
-                    opacity: hover ? 0.8 : 0.3,
+                className="fixed top-0 left-0 pointer-events-none z-[9998]"
+                style={{
+                    width: '24px',
+                    height: '24px',
+                    borderRadius: 0,
+                    border: `1px solid ${hover ? 'rgba(200,134,10,0.7)' : 'rgba(232,212,160,0.2)'}`,
+                    boxShadow: hover ? '0 0 8px rgba(200,134,10,0.2)' : 'none',
+                    transition: 'border-color 0.15s, box-shadow 0.15s',
                 }}
-                transition={{ type: 'spring', stiffness: 200, damping: 18, mass: 0.1 }}
+                animate={{
+                    x: pos.x - 12,
+                    y: pos.y - 12,
+                    scale: click ? 0.8 : hover ? 1.6 : 1,
+                    opacity: hover ? 1 : 0.5,
+                }}
+                transition={{ type: 'spring', stiffness: 200, damping: 20, mass: 0.1 }}
             />
         </>
     );

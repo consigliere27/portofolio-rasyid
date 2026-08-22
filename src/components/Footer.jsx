@@ -11,28 +11,50 @@ const Footer = () => {
 
     return (
         <footer className="section-deep mesh-footer relative">
-            <div className="divider" />
+            {/* Heavy masthead divider */}
+            <div style={{ padding: '0 1.5rem' }}>
+                <div style={{ borderTop: '1px solid var(--border-heavy)', marginBottom: '3px' }} />
+                <div style={{ borderTop: '3px solid var(--border-mid)', marginBottom: '3px' }} />
+                <div style={{ borderTop: '1px solid var(--border-heavy)' }} />
+            </div>
 
-            <div className="max-w-5xl mx-auto px-6 py-6">
-                <div className="flex flex-col items-center text-center gap-5">
-                    {/* Brand */}
+            <div className="max-w-5xl mx-auto px-6 py-8">
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+
+                    {/* Brand — masthead style */}
                     <motion.a
                         href="#home"
                         onClick={(e) => scrollTo(e, '#home')}
-                        className="cursor-hover inline-block"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        className="cursor-hover"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.97 }}
                     >
-                        <h3 className="text-3xl font-bold font-outfit" style={{ color: '#f0eef8' }}>
-                            murashi<span style={{ color: 'rgba(129, 140, 248, 0.8)' }}>.dev</span>
+                        <h3 style={{
+                            fontFamily: "'Special Elite', cursive",
+                            fontSize: '2.2rem',
+                            color: 'var(--cream)',
+                            letterSpacing: '0.05em',
+                            margin: 0,
+                            textShadow: '2px 2px 0 rgba(0,0,0,0.8)',
+                        }}>
+                            murashi<span style={{ color: 'var(--amber)' }}>.dev</span>
                         </h3>
                     </motion.a>
 
-                    <p className="text-sm font-light tracking-wide max-w-sm mx-auto" style={{ color: 'rgba(226, 224, 240, 0.6)' }}>
-                        Dibuat dengan terminal terbuka dan kopi hitam.
+                    {/* Tagline — italic */}
+                    <p style={{
+                        fontFamily: "'Courier Prime', monospace",
+                        fontSize: '0.75rem',
+                        color: 'var(--cream-muted)',
+                        fontStyle: 'italic',
+                        letterSpacing: '0.05em',
+                        margin: 0,
+                    }}>
+                        "Dibuat dengan terminal terbuka dan kopi hitam."
                     </p>
 
-                    <div className="flex justify-center gap-4 mt-2">
+                    {/* Social icons */}
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
                         {[
                             { icon: FiLinkedin, href: 'https://www.linkedin.com/in/muhammad-rasyid-shiddiq' },
                             { icon: FiInstagram, href: 'https://instagram.com/rasyidshdqq' },
@@ -43,55 +65,93 @@ const Footer = () => {
                                 href={s.href}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="p-3 rounded-xl cursor-hover transition-all"
+                                className="cursor-hover"
                                 style={{
-                                    color: 'rgba(226, 224, 240, 0.4)',
-                                    background: 'rgba(255, 255, 255, 0.02)',
-                                    border: '1px solid rgba(255, 255, 255, 0.05)'
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    width: '32px', height: '32px',
+                                    color: 'var(--cream-muted)',
+                                    border: '1px solid var(--border-heavy)',
+                                    background: 'rgba(10,7,0,0.4)',
                                 }}
                                 whileHover={{
-                                    color: '#818cf8',
-                                    scale: 1.1,
-                                    background: 'rgba(129, 140, 248, 0.1)',
-                                    borderColor: 'rgba(129, 140, 248, 0.2)'
+                                    color: 'var(--amber)',
+                                    borderColor: 'var(--amber)',
+                                    background: 'rgba(200,134,10,0.08)',
                                 }}
                                 whileTap={{ scale: 0.9 }}
                             >
-                                <s.icon size={18} />
+                                <s.icon size={14} />
                             </motion.a>
                         ))}
                     </div>
                 </div>
 
-                {/* Bottom */}
-                <div className="mt-8 pt-5 flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.04)' }}>
-                    <p className="text-[11px] uppercase tracking-widest font-medium text-center md:text-left" style={{ color: 'rgba(226, 224, 240, 0.3)' }}>
+                {/* Bottom copyright */}
+                <div style={{
+                    marginTop: '2rem',
+                    paddingTop: '1rem',
+                    borderTop: '1px solid var(--border-heavy)',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    flexWrap: 'wrap',
+                    gap: '0.5rem',
+                }}>
+                    <p style={{
+                        fontFamily: "'Courier Prime', monospace",
+                        fontSize: '0.6rem',
+                        color: 'var(--cream-muted)',
+                        letterSpacing: '0.2em',
+                        textTransform: 'uppercase',
+                        margin: 0,
+                        opacity: 0.6,
+                    }}>
                         © {year} Muhammad Rasyid Shiddiq
                     </p>
-                    <div className="flex gap-4">
-                        <p className="text-[11px] uppercase tracking-widest font-medium" style={{ color: 'rgba(226, 224, 240, 0.3)' }}>
-                            Indonesia
-                        </p>
-                    </div>
+                    <p style={{
+                        fontFamily: "'Courier Prime', monospace",
+                        fontSize: '0.6rem',
+                        color: 'var(--cream-muted)',
+                        letterSpacing: '0.2em',
+                        textTransform: 'uppercase',
+                        margin: 0,
+                        opacity: 0.6,
+                    }}>
+                        Indonesia · All Rights Reserved
+                    </p>
                 </div>
             </div>
 
-            {/* Back to top */}
+            {/* Back to top — mechanical button */}
             <motion.button
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="fixed bottom-8 right-8 p-2.5 rounded-full cursor-hover z-40"
-                style={{ color: 'rgba(226, 224, 240, 0.2)', background: 'rgba(255, 255, 255, 0.03)', border: '1px solid rgba(255, 255, 255, 0.06)' }}
+                className="cursor-hover"
+                style={{
+                    position: 'fixed',
+                    bottom: '2rem',
+                    right: '2rem',
+                    width: '36px', height: '36px',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    color: 'var(--cream-muted)',
+                    background: 'rgba(10,7,0,0.8)',
+                    border: '2px solid var(--border-heavy)',
+                    boxShadow: '3px 3px 0 #000',
+                    zIndex: 40,
+                }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 whileHover={{
-                    color: '#818cf8',
-                    borderColor: 'rgba(129, 140, 248, 0.2)',
-                    background: 'rgba(129, 140, 248, 0.06)',
+                    color: 'var(--amber)',
+                    borderColor: 'var(--amber)',
+                    background: 'rgba(200,134,10,0.08)',
                 }}
-                whileTap={{ scale: 0.9 }}
+                whileTap={{ x: 2, y: 2, boxShadow: '1px 1px 0 #000' }}
             >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="square" strokeLinejoin="miter" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
                 </svg>
             </motion.button>
         </footer>
